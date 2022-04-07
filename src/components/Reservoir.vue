@@ -20,7 +20,6 @@
 			try {
 				const res = await this.$http.get(api);
 				this.data = res.data;
-				console.log(this.data[0]);
 			} catch (err) {
 				console.log("獲取資料失敗:\n", err);
 			}

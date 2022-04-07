@@ -59,7 +59,6 @@
 				);
 			},
 			watchCapacity() {
-				console.log(100 - this._props.parentData.percentage);
 				if (this._props.parentData.percentage < 30) {
 					return "js-circle__danger";
 				}
