@@ -124,8 +124,7 @@
 		&__percent {
 			position: absolute;
 			font: {
-				size: 50px;
-				weight: 600;
+				size: 60px;
 			}
 		}
 		.info {
