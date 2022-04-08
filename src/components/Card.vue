@@ -1,24 +1,30 @@
 <template>
 	<li class="card">
 		<h2 class="card__title">{{ parentData.name }}</h2>
-		<div class="card__body d-flex" :class="watchCapacity()">
+		<div 
+			class="card__body d-flex" 
+			:class="watchCapacity(parentData.percentage)"
+		>
 			<div class="card__water">
-				<div class="card__inner" :style="trans"></div>
+				<div
+					class="card__inner" 
+					:style="{height: parentData.percentage + '%'}"
+				></div>
 			</div>
-			<div class="card__percent">{{ parentData.percentage }}%</div>
+			<div class="card__percent">{{ Math.round(parentData.percentage * 10) / 10 }}%</div>
 		</div>
 		<div class="card__foot info">
 			<p class="info__aval">有效蓄水量：{{ parentData.volumn }} 萬立方公尺</p>
 			<p
 				class="info__flow"
 				:class="{
-					'js-text__danger': isDecend(),
-					'js-text__peace': !isDecend(),
+					'js-text__danger' : isDecend(),
+					'js-text__peace' : !isDecend(),
 				}"
 			>
 				<span v-if="isDecend()">昨日水量下降 </span>
 				<span v-else>昨日水量上升 </span>
-				{{ calcWaterFlow() }}%
+				{{ isNaN(calcWaterFlow())? "資料有誤..." : calcWaterFlow() + "%" }}
 			</p>
 			<p class="info__date">{{ parentData.updateAt }}</p>
 		</div>
@@ -26,43 +32,33 @@
 </template>
 <script>
 	export default {
-		data() {
-			return {
-				waterHeight: 100 - this._props.parentData.percentage,
-			};
-		},
 		props: {
 			parentData: Object,
-		},
-		computed: {
-			trans() {
-				return `transform: translateY(${this.waterHeight}%)`;
-			},
 		},
 		methods: {
 			isDecend() {
 				return (
 					(
-						(this._props.parentData.daliyNetflow /
-							parseFloat(this._props.parentData.baseAvailable)) *
+						(this.parentData.daliyNetflow /
+							parseFloat(this.parentData.baseAvailable)) *
 						100
-					).toFixed(2) > 0
+					).toFixed(2) > 0 
 				);
 			},
 			calcWaterFlow() {
 				return Math.abs(
 					(
-						(this._props.parentData.daliyNetflow /
-							parseFloat(this._props.parentData.baseAvailable)) *
+						(this.parentData.daliyNetflow /
+							parseFloat(this.parentData.baseAvailable)) *
 						100
 					).toFixed(2)
 				);
 			},
-			watchCapacity() {
-				if (this._props.parentData.percentage < 30) {
+			watchCapacity(val) {
+				if (val < 30) {
 					return "js-circle__danger";
 				}
-				if (this._props.parentData.percentage < 50) {
+				if (val < 50) {
 					return "js-circle__orange";
 				}
 				return "js-circle__peace";
@@ -115,10 +111,9 @@
 			overflow: hidden;
 		}
 		&__inner {
-			content: "";
 			position: absolute;
+			bottom: 0;
 			width: 100%;
-			height: 100%;
 		}
 
 		&__percent {

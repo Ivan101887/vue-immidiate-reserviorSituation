@@ -9,7 +9,7 @@
 
 <script>
 import Reservoir from "@/components/Reservoir"
-import Header from "./components/Header.vue"
+import Header from "@/components/Header"
 export default {
   name: 'App',
   components: {
